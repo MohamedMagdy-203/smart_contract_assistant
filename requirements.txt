@@ -1,10 +1,38 @@
-langchain
-langchain-huggingface
-langchain-community
-chromadb
-langchain-chroma
-pypdf
-python-docx
-sentence-transformers
-gradio
-python-dotenv
+# Contract Analysis AI Assistant - Requirements
+# Generated from installed packages
+
+# Core LangChain packages
+langchain==1.2.10
+langchain-core==1.2.12
+langchain-community==0.4.1
+langchain-groq==1.1.2
+langchain-huggingface==1.2.0
+langchain-chroma==1.1.0
+langchain-text-splitters==1.1.0
+
+# Vector Database
+chromadb==1.5.0
+
+# Document Processing
+pypdf==6.7.0
+python-docx==1.2.0
+
+# Embeddings and ML
+sentence-transformers==5.2.2
+transformers==4.57.6
+torch==2.10.0
+huggingface_hub==0.36.2
+
+# Web Interface
+gradio==6.5.1
+gradio_client==2.0.3
+
+# Environment and Configuration
+python-dotenv==1.2.1
+
+# Required Dependencies (automatically installed but listed for completeness)
+numpy==2.4.2
+pandas==3.0.0
+pydantic==2.12.5
+requests==2.32.5
+httpx==0.28.1
