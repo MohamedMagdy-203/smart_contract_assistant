@@ -16,3 +16,13 @@ def load_vector_db():
     embedding_model = HuggingFaceEmbeddings(model_name = "sentence-transformers/all-MiniLM-L6-v2")
     db = Chroma(persist_directory=persist_directory, embedding_function=embedding_model)
     return db
+
+def load_llm():
+    """
+    Intilaize the llm from huggingface
+    """
+    repo_id = "Qwen/Qwen2.5-7B-Instruct"
+    llm = HuggingFaceEndpoint(repo_id=repo_id, temperature=.1, max_new_tokens=512, huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN"))
+
+    return llm
+
