@@ -2,6 +2,7 @@ langchain
 langchain-huggingface
 langchain-community
 chromadb
+langchain-chroma
 pypdf
 python-docx
 sentence-transformers
