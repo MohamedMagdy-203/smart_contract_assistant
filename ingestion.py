@@ -41,7 +41,7 @@ def create_vector_db(text):
     return db
 
 if __name__ == "__main__":
-    file_path = "D:\smart_contract_assistant\sample_contract.pdf"
+    file_path = r"D:\smart_contract_assistant\sample_contract.pdf"
     if os.path.exists(file_path):
         print(f"1. Loading file: {file_path}")
         docs = load_documents(file_path)
