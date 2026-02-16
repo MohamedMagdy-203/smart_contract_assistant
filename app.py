@@ -77,17 +77,19 @@ def create_rag_chain(vector_db, llm):
     retriever = vector_db.as_retriever(search_kwargs={"k": 5})
     
     system_prompt = (
-        "You are a contract analysis AI assistant.\n"
+        "You are a contract analysis AI assistant with conversation memory.\n"
         "Your task is to analyze legal contracts strictly using ONLY the provided context.\n\n"
         
         "Rules:\n"
-        "1. Do not rely on prior knowledge.\n"
-        "2. Do not infer missing information.\n"
-        "3. Do not summarize unless asked.\n"
-        "4. If the answer is not explicitly stated, respond exactly with:\n"
+        "1. Pay attention to the conversation history to understand follow-up questions.\n"
+        "2. When the user refers to previous answers (e.g., 'what about that clause?'), use the conversation context.\n"
+        "3. Do not rely on prior knowledge beyond the document.\n"
+        "4. Do not infer missing information.\n"
+        "5. If the answer is not explicitly stated, respond with:\n"
         "'I do not know based on the provided document.'\n\n"
         
         "Answer format:\n"
+        "- For follow-up questions, acknowledge the previous context\n"
         "- Relevant Clause: (quote exact text)\n"
         "- Location: (section/clause number if available)\n"
         "- Explanation: (brief legal explanation based only on text)\n\n"
@@ -163,7 +165,7 @@ def process_document(file):
         yield error_msg, gr.update(interactive=False), gr.update(selected=0)
 
 def chat_with_document(message, history):
-    """Chat function for Gradio ChatInterface."""
+    """Chat function for Gradio ChatInterface with memory."""
     global rag_chain, vector_db
     
     if rag_chain is None:
@@ -173,8 +175,24 @@ def chat_with_document(message, history):
         return "Please enter a question."
     
     try:
+        # Build conversation context from history
+        conversation_context = ""
+        if history and len(history) > 0:
+            conversation_context = "Previous conversation:\n"
+            # Handle different history formats
+            for exchange in history[-3:]:  # Last 3 exchanges
+                if isinstance(exchange, (list, tuple)) and len(exchange) >= 2:
+                    user_msg = exchange[0]
+                    assistant_msg = exchange[1]
+                    conversation_context += f"User: {user_msg}\n"
+                    conversation_context += f"Assistant: {assistant_msg}\n"
+            conversation_context += "\n"
+        
+        # Combine context with current message
+        full_query = conversation_context + f"Current question: {message}"
+        
         # Get the response from RAG chain
-        response = rag_chain.invoke(message)
+        response = rag_chain.invoke(full_query)
         return response
         
     except Exception as e:
@@ -259,7 +277,7 @@ with gr.Blocks(title="Contract Analysis AI Assistant") as demo:
                     "What are the obligations of each party?"
                 ],
                 title="Ask Questions About Your Contract",
-                description="Ask any question about the uploaded contract. The AI will only answer based on the document content."
+                description="Ask any question about the uploaded contract. The AI remembers the conversation and can answer follow-up questions."
             )
         
         # Tab 3: Document Retrieval (Advanced)
