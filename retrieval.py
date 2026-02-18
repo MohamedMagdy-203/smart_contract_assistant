@@ -50,7 +50,7 @@ def create_rag_chain(vector_db, llm):
         "- Relevant Clause: (quote exact text)\n"
         "- Location: (section/clause number if available)\n"
         "- Explanation: (brief legal explanation based only on text)\n\n"
-        
+        "Previous Conversation History:{chat_history}"
         "Context:\n"
         "{context}\n\n"
         "Question: {input}"
@@ -71,7 +71,7 @@ def create_rag_chain(vector_db, llm):
         return result
     
     rag_chain = (
-        {"context": retriever | format_docs, "input": RunnablePassthrough()}
+        {"context": retriever | format_docs, "input": RunnablePassthrough(), "chat_history": RunnablePassthrough()}
         | prompt
         | llm
         | StrOutputParser()
