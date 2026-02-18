@@ -40,7 +40,7 @@ async def upload_file(file: UploadFile = File(...)):
     except Exception as e :
         return JSONResponse(content={"status": "error", "message": str(e)}, status_code=500)
     
-
+chat_history_buffer = []
 class AskRequest(BaseModel):
     query:str
 
@@ -50,7 +50,9 @@ async def ask_question(request:AskRequest):
         return JSONResponse(content = {"error" : "There is no file uploaded" },status_code=400)
     else:
         try:
-            response = rag_chain.invoke(request.query)
+            history_text = "\n".join([f"User: {q}\nAI: {a}" for q, a in chat_history_buffer])
+            response = rag_chain.invoke({'input':request.query,'chat_history':history_text})
+            chat_history_buffer.append((request.query, response))
             return {'answer':response}
         except Exception as e:
             return JSONResponse(content={'error':f'There is no response and the error is {str(e)}'},status_code=500)
