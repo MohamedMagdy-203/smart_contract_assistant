@@ -1,3 +1,4 @@
+from operator import itemgetter
 import os
 from dotenv import load_dotenv
 from langchain_chroma import Chroma
@@ -71,7 +72,10 @@ def create_rag_chain(vector_db, llm):
         return result
     
     rag_chain = (
-        {"context": retriever | format_docs, "input": RunnablePassthrough(), "chat_history": RunnablePassthrough()}
+        {
+            "context": itemgetter("input") | retriever | format_docs, "input": itemgetter("input"),
+            "chat_history": itemgetter("chat_history")
+        }
         | prompt
         | llm
         | StrOutputParser()
