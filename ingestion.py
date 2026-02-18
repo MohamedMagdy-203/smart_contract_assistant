@@ -39,17 +39,3 @@ def create_vector_db(text):
     embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     db = Chroma.from_documents(documents=text, embedding=embedding_model, persist_directory=persist_directory)
     return db
-
-if __name__ == "__main__":
-    file_path = r"D:\smart_contract_assistant\sample_contract.pdf"
-    if os.path.exists(file_path):
-        print(f"1. Loading file: {file_path}")
-        docs = load_documents(file_path)
-        print(f"2. Splitting text...")
-        chunks = split_documents(docs)
-        print(f"   Split into {len(chunks)} chunks.")
-        print("3. Creating Vector DB...")
-        create_vector_db(chunks)
-        print("--- Ingestion Pipeline Complete ---")
-    else:
-        print(f"Error: File '{file_path}' not found. Please place a PDF file in the project folder to test.")
