@@ -39,3 +39,18 @@ async def upload_file(file: UploadFile = File(...)):
         return JSONResponse(content={"status": "success", "message": f"File '{file_path}' processed and vector DB updated."})
     except Exception as e :
         return JSONResponse(content={"status": "error", "message": str(e)}, status_code=500)
+    
+
+class AskRequest(BaseModel):
+    query:str
+
+@app.post("/ask")
+async def ask_question(request:AskRequest):
+    if rag_chain is None:
+        return JSONResponse(content = {"error" : "There is no file uploaded" },status_code=400)
+    else:
+        try:
+            response = rag_chain.invoke(request.query)
+            return {'answer':response}
+        except Exception as e:
+            return JSONResponse(content={'error':f'There is no response and the error is {str(e)}'},status_code=500)
