@@ -3,7 +3,14 @@
 ---
 ## DEMO
 
-https://github.com/user-attachments/assets/0dbe46dc-0f8b-4d3e-a9fa-b8965499095d
+
+https://github.com/user-attachments/assets/ab3a4a4e-acdb-4696-bb40-b697df7a92b7
+
+## Evaluation_demo
+
+
+https://github.com/user-attachments/assets/2a1c3448-dcd3-4082-be5f-4cf54487c49d
+
 
 ---
 
@@ -227,3 +234,4 @@ Slow first run: The HuggingFace embedding model downloads on first use. Subseque
 
 
 Built with LangChain, ChromaDB, HuggingFace Sentence Transformers, Groq API, FastAPI, and Gradio.
+
